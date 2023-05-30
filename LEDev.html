@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link href="./public/index.css" rel="stylesheet" />
+    <link href="./public/reset.css" rel="stylesheet" />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main_content">
+        <div class="dashboard">
+          <div class="dashboard_content">
+            <div class="nav">
+              <h1 class="nav_brand">LEDev</h1>
+              <button id="connect" class="nav_link">
+                Connect
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="8"
+                  height="8"
+                  fill="currentColor"
+                  id="status"
+                  viewBox="0 0 16 16"
+                >
+                  <circle cx="8" cy="8" r="8" />
+                </svg>
+              </button>
+              <button class="nav_link">
+                Select effect
+                <div class="dropdown">
+                  <div class="dropdown_link">Wave</div>
+                </div>
+              </button>
+            </div>
+            <div class="panel">
+              <h2 class="panel_header">Color Select</h2>
+              <div class="input">
+                <label class="input_label" for="color">#c8743a</label>
+                <input id="color" type="color" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="bundle.js"></script>
+</html>
