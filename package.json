@@ -9,9 +9,9 @@
     "serialport": "^10.5.0"
   },
   "scripts": {
-    "compile": "arduino-cli compile -b arduino:avr:uno .",
-    "upload": "arduino-cli upload -b arduino:avr:uno -p /dev/cu.usbmodem14201 .",
-    "monitor": "screen /dev/cu.usbmodem14101 9600",
+    "compile": "arduino-cli compile -b arduino:avr:uno",
+    "upload": "arduino-cli upload -b arduino:avr:uno -p /dev/tty.usbmodem141101",
+    "monitor": "screen /dev/tty.usbmodem141101 9600",
     "deploy": "npm run compile && npm run upload"
   }
 }

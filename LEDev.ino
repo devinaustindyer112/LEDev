@@ -1,9 +1,11 @@
 
 #include <FastLED.h>
+#include "./jfa/String/String.hpp"
+// #include "./jfa/Utilities/Utilities.hpp"
 
 #define LED_PIN 13
 #define NUM_LEDS 121
-#define BRIGHTNESS 60
+#define BRIGHTNESS 20
 #define FRAMES_PER_SECOND 20
 #define BPM 50
 #define WAVE_LEN 10
@@ -19,7 +21,7 @@ void setup()
   FastLED.setBrightness(BRIGHTNESS);
 
   // Sets up pallete for metor effect
-  currentPalette = CRGBPalette16(CRGB::Green, CRGB::Black);
+  currentPalette = CRGBPalette16(CRGB::Blue, CRGB::Black);
   fill_palette(leds, NUM_LEDS, 0, 255 / WAVE_LEN, currentPalette);
 
   Serial.begin(115200);
