@@ -1,6 +1,6 @@
 
 #include <FastLED.h>
-#include "./jfa/String/String.hpp"
+#include "./String.hpp"
 // #include "./jfa/Utilities/Utilities.hpp"
 
 #define LED_PIN 13
@@ -30,6 +30,8 @@ void setup()
 
 void loop()
 {
+  JFA::String str("hi");
+
   // Serial communication
   if (Serial.available() > 0)
   {

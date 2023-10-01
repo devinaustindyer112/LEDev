@@ -1,6 +1,5 @@
-#include "../Utilities/Utilities.hpp"
+#include "./Utilities.hpp"
 #include "String.hpp"
-#include <iostream>
 
 JFA::String::String()
 {
@@ -229,12 +228,4 @@ JFA::String JFA::String::replaceAll(const char *search, const char *replace)
         str = str.replace(search, replace);
     }
     return str;
-}
-
-void JFA::String::print()
-{
-    for (int i = 0; i < this->length(); i++)
-    {
-        std::cout << this->str[i];
-    }
 }
