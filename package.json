@@ -10,8 +10,8 @@
   },
   "scripts": {
     "compile": "arduino-cli compile -b arduino:avr:uno",
-    "upload": "arduino-cli upload -b arduino:avr:uno -p /dev/tty.usbmodem141101",
-    "monitor": "screen /dev/tty.usbmodem141101 9600",
+    "upload": "arduino-cli upload -b arduino:avr:uno -p /dev/tty.usbmodem14101",
+    "monitor": "screen /dev/tty.usbmodem14101 9600",
     "deploy": "npm run compile && npm run upload"
   }
 }

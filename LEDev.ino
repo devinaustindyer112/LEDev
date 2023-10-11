@@ -13,6 +13,7 @@
 
 CRGB leds[NUM_LEDS];
 CRGBPalette16 currentPalette;
+char string[1000];
 
 void setup()
 {
@@ -30,21 +31,31 @@ void setup()
 
 void loop()
 {
-  JFA::String str("hi");
+  char byteRead;
 
-  // Serial communication
-  if (Serial.available() > 0)
+  int availableBytes = Serial.available();
+  if (availableBytes > 0)
   {
-
-    byte data[BYTE_COUNT] = {};
-    Serial.readBytes(data, BYTE_COUNT);
-    unsigned long result = ((unsigned long)data[0] << 16) | ((unsigned long)data[1] << 8) | data[2]; // concatenate AA, BB, and CC to obtain the 24-bit value
-
-    delay(1000);
-
-    currentPalette = CRGBPalette16(result, CRGB::Black);
-    fill_palette(leds, NUM_LEDS, 0, 255 / WAVE_LEN, currentPalette);
+    for (int i = 0; i < availableBytes; i++)
+    {
+      string[i] = Serial.read();
+    }
+    Serial.print(string);
   }
+
+  // // Serial communication
+  // if (Serial.available() > 0)
+  // {
+
+  //   byte data[BYTE_COUNT] = {};
+  //   Serial.readBytes(data, BYTE_COUNT);
+  //   unsigned long result = ((unsigned long)data[0] << 16) | ((unsigned long)data[1] << 8) | data[2]; // concatenate AA, BB, and CC to obtain the 24-bit value
+
+  //   delay(1000);
+
+  //   currentPalette = CRGBPalette16(result, CRGB::Black);
+  //   fill_palette(leds, NUM_LEDS, 0, 255 / WAVE_LEN, currentPalette);
+  // }
 
   // Setup sine wave
   int lowest = 50;

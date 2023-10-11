@@ -5,10 +5,8 @@ namespace JFA
 {
     class String
     {
-    private:
-        char *str;
-
     public:
+        char *str;
         String();
         String(const char *str);
         String(const String &str);
@@ -19,16 +17,15 @@ namespace JFA
         String operator+(String str);
         String operator+(char character);
         String &operator=(const String &other);
+        String &operator=(char character);
         char operator[](int index);
         char operator[](int index) const;
         char operator==(const char *str);
         char operator==(String str);
-        const char *toCharArray();
         int length();
         int length() const;
         int indexOf(const char *search);
         bool equals(String str);
-        void print();
     };
 }
 
