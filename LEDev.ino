@@ -1,7 +1,6 @@
 
 #include <FastLED.h>
 #include "./String.hpp"
-// #include "./jfa/Utilities/Utilities.hpp"
 
 #define LED_PIN 13
 #define NUM_LEDS 121
@@ -11,9 +10,11 @@
 #define WAVE_LEN 10
 #define BYTE_COUNT 3
 
+#define MAX_INPUT 100
+
 CRGB leds[NUM_LEDS];
 CRGBPalette16 currentPalette;
-char string[1000];
+int stringIndex = 0;
 
 void setup()
 {
@@ -25,22 +26,20 @@ void setup()
   currentPalette = CRGBPalette16(CRGB::Blue, CRGB::Black);
   fill_palette(leds, NUM_LEDS, 0, 255 / WAVE_LEN, currentPalette);
 
-  Serial.begin(115200);
+  Serial.begin(9600);
   Serial.setTimeout(100);
 }
 
 void loop()
 {
-  char byteRead;
-
-  int availableBytes = Serial.available();
-  if (availableBytes > 0)
+  if (Serial.available() > 0)
   {
-    for (int i = 0; i < availableBytes; i++)
+    while (Serial.available() > 0)
     {
-      string[i] = Serial.read();
+      const byte inByte = Serial.read();
+      Serial.print(inByte);
+      processIncomingByte(inByte);
     }
-    Serial.print(string);
   }
 
   // // Serial communication
@@ -57,26 +56,44 @@ void loop()
   //   fill_palette(leds, NUM_LEDS, 0, 255 / WAVE_LEN, currentPalette);
   // }
 
-  // Setup sine wave
-  int lowest = 50;
-  int highest = 200;
-  int position = beatsin16(BPM, lowest, highest);
+  // // Setup sine wave
+  // int lowest = 50;
+  // int highest = 200;
+  // int position = beatsin16(BPM, lowest, highest);
 
-  // Meteor effect
-  for (int i = 0; i < NUM_LEDS; i++)
+  // // Meteor effect
+  // for (int i = 0; i < NUM_LEDS; i++)
+  // {
+  //   int lastLED = NUM_LEDS - 1;
+  //   if (i == 0)
+  //   {
+  //     leds[lastLED] = leds[0];
+  //   }
+  //   else
+  //   {
+  //     leds[i - 1] = leds[i];
+  //   }
+  // }
+
+  // // Set delay and show
+  // FastLED.delay(1000 / FRAMES_PER_SECOND);
+  // FastLED.show();
+}
+
+void processIncomingByte(const byte inByte)
+{
+  static char input_line[MAX_INPUT];
+  static unsigned int input_pos = 0;
+
+  if (inByte == '\n')
   {
-    int lastLED = NUM_LEDS - 1;
-    if (i == 0)
-    {
-      leds[lastLED] = leds[0];
-    }
-    else
-    {
-      leds[i - 1] = leds[i];
-    }
+    input_line[input_pos] = '\0';
+    input_pos = 0;
+    return;
   }
 
-  // Set delay and show
-  FastLED.delay(1000 / FRAMES_PER_SECOND);
-  FastLED.show();
+  if (input_pos < (MAX_INPUT - 1))
+  {
+    input_line[input_pos++] = inByte;
+  }
 }
