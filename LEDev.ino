@@ -1,6 +1,10 @@
 
 #include <FastLED.h>
+#include "./Parser.hpp"
+#include "./JSONValue.hpp"
+#include "./JSONObject.hpp"
 #include "./String.hpp"
+#include "./Utilities.hpp"
 
 #define BAUD_RATE 19200
 #define LED_PIN 13
@@ -20,7 +24,7 @@ char serialString[100]; // Empty serial string variable
 int stringIndex = 0;    // Index of serial string
 bool stringComplete = false;
 
-unsigned long lastMessage = millis();
+bool halt = false;
 
 void setup()
 {
@@ -38,17 +42,28 @@ void setup()
 
 void loop()
 {
+  // The serial string has been parsed
   if (stringComplete)
   {
-    Serial.write("MR");
+    // Process here
+    Serial.print(serialString);
+
+    // Serial.write(serialString);
+    if(strcmp(serialString, "H") == 0){
+      Serial.print("H");
+      halt = true;
+    } 
+    else if(strcmp(serialString, "R") == 0) {
+      Serial.print("R");
+      halt = false;
+    }
+
     serialString[0] = '\0';
     stringIndex = 0;
     stringComplete = false;
   }
 
-  unsigned long currentMillis = millis();
-
-  if (currentMillis - lastMessage >= 1000)
+  if (!halt)
   {
     FastLED.delay(1000 / FRAMES_PER_SECOND);
     FastLED.show();
@@ -59,16 +74,17 @@ void loop()
 
 void serialEvent()
 {
-  lastMessage = millis();
   while (Serial.available())
   {
     char inChar = (char)Serial.read();
-    serialString[stringIndex] = inChar;
-    stringIndex++;
     if (inChar == '\n')
     {
       stringComplete = true;
+      serialString[stringIndex] = '\0';
+    } else {
+      serialString[stringIndex] = inChar;
     }
+    stringIndex++;
   }
 }
 
