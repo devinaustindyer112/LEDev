@@ -46,15 +46,19 @@ async function watchColorPicker(event, writer) {
   // const dataArray = new Uint8Array(hexArray);
   // await writer.write(dataArray);
 
-  await writer.write(encoder.encode("\n"));
-  console.log("first write");
-  await writer.write(encoder.encode("\n"));
-  console.log("second write");
+  await writer.write(encoder.encode("H\n"));
 
-  // const json = {
-  //   effect: "wave",
-  // }
-  // await writer.write(encoder.encode(`${JSON.stringify(json)}\n`));
+  setTimeout(async () => {
+    const json = {
+      effect: "wave",
+    }
+    await writer.write(encoder.encode(`${JSON.stringify(json)}\n`));
+  }, 1000);
+
+  setTimeout(async () => {
+    await writer.write(encoder.encode("R\n"));
+  }, 2000);
+
 }
 
 //JSON testing

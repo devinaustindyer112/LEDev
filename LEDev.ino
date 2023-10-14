@@ -1,10 +1,4 @@
-
 #include <FastLED.h>
-#include "./Parser.hpp"
-#include "./JSONValue.hpp"
-#include "./JSONObject.hpp"
-#include "./String.hpp"
-#include "./Utilities.hpp"
 
 #define BAUD_RATE 19200
 #define LED_PIN 13
@@ -14,25 +8,19 @@
 #define BPM 50
 #define WAVE_LEN 10
 #define BYTE_COUNT 3
-
 #define MAX_INPUT 100
 
 CRGB leds[NUM_LEDS];
 CRGBPalette16 currentPalette;
 
-char serialString[100]; // Empty serial string variable
-int stringIndex = 0;    // Index of serial string
-bool stringComplete = false;
-
+char serialString[MAX_INPUT] = ""; // Initialize as an empty string
 bool halt = false;
 
-void setup()
-{
-  FastLED.clear();
+void setup() {
   FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
   FastLED.setBrightness(BRIGHTNESS);
 
-  // Sets up pallete for metor effect
+  // Set up palette for meteor effect
   currentPalette = CRGBPalette16(CRGB::Blue, CRGB::Black);
   fill_palette(leds, NUM_LEDS, 0, 255 / WAVE_LEN, currentPalette);
 
@@ -40,53 +28,41 @@ void setup()
   Serial.setTimeout(10000);
 }
 
-void loop()
-{
-  // The serial string has been parsed
-  if (stringComplete)
-  {
-    // Process here
-    Serial.print(serialString);
-
-    // Serial.write(serialString);
-    if(strcmp(serialString, "H") == 0){
-      Serial.print("H");
-      halt = true;
-    } 
-    else if(strcmp(serialString, "R") == 0) {
-      Serial.print("R");
-      halt = false;
-    }
-
-    serialString[0] = '\0';
-    stringIndex = 0;
-    stringComplete = false;
+void loop() {
+  if (Serial.available()) {
+    halt = true;
+    processSerialData();
   }
 
-  if (!halt)
-  {
-    FastLED.delay(1000 / FRAMES_PER_SECOND);
-    FastLED.show();
+  if (halt) {
+    return; // Skip processing if halted
   }
 
-  // https://docs.arduino.cc/built-in-examples/communication/SerialEvent
+  FastLED.delay(1000 / FRAMES_PER_SECOND);
+  FastLED.show();
 }
 
-void serialEvent()
-{
-  while (Serial.available())
-  {
-    char inChar = (char)Serial.read();
-    if (inChar == '\n')
-    {
-      stringComplete = true;
-      serialString[stringIndex] = '\0';
-    } else {
-      serialString[stringIndex] = inChar;
-    }
-    stringIndex++;
+void processSerialData() {
+  char inChar = (char)Serial.read();
+  if (inChar == '\n') {
+    serialString[strlen(serialString)] = '\0'; // Remove the newline character
+    handleCommand(serialString);
+    serialString[0] = '\0'; // Clear the string
+  } else {
+    strncat(serialString, &inChar, 1); // Append char to the string
   }
 }
+
+void handleCommand(const char* command) {
+  Serial.write(command);
+
+  if (strcmp(command, "H") == 0) {
+    halt = true;
+  } else if (strcmp(command, "R") == 0) {
+    halt = false;
+  }
+}
+
 
 // // Serial communication
 // if (Serial.available() > 0)
