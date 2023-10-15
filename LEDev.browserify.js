@@ -51,27 +51,10 @@ async function watchColorPicker(event, writer) {
   setTimeout(async () => {
     const json = {
       effect: "wave",
+      color: "#c8743a",
     }
     await writer.write(encoder.encode(`${JSON.stringify(json)}\n`));
   }, 1000);
-
-
-  setTimeout(async () => {
-    console.log("sending R");
-    await writer.write(encoder.encode("R\n"));
-  }, 3000);
-
-}
-
-//JSON testing
-
-function writeJSON() {
-  let effect = {
-    type: "wave",
-    settings: {
-      color: "#c8743a",
-    },
-  };
 }
 
 },{}]},{},[1]);

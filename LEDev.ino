@@ -77,10 +77,12 @@ void setEffects(const char *config)
 
   Parser parser(config);
   JSONObject obj = parser.parseObject();
-  JSONValue value = obj.get("effect");
+  JSONValue effect = obj.get("effect");
+  JSONValue color = obj.get("color");
 
   halt = false;
-  Serial.write(value.string.str);
+  Serial.write(effect.string.str);
+  Serial.write(color.string.str);
 }
 
 // Logic for meteor effect below
