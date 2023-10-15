@@ -1,10 +1,15 @@
 #include <FastLED.h>
+#include "Parser.hpp"
+#include "JSONObject.hpp"
+#include "JSONValue.hpp"
+#include "String.hpp"
+#include "Utilities.hpp"
 
-#define BAUD_RATE 19200
+#define BAUD_RATE 115200
 #define LED_PIN 13
 #define NUM_LEDS 121
 #define BRIGHTNESS 20
-#define FRAMES_PER_SECOND 2
+#define FRAMES_PER_SECOND 20
 #define BPM 50
 #define WAVE_LEN 10
 #define BYTE_COUNT 3
@@ -13,10 +18,11 @@
 CRGB leds[NUM_LEDS];
 CRGBPalette16 currentPalette;
 
-char serialString[MAX_INPUT] = ""; // Initialize as an empty string
+char serialString[MAX_INPUT] = "";
 bool halt = false;
 
-void setup() {
+void setup()
+{
   FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
   FastLED.setBrightness(BRIGHTNESS);
 
@@ -28,41 +34,56 @@ void setup() {
   Serial.setTimeout(10000);
 }
 
-void loop() {
-  if (Serial.available()) {
-    halt = true;
+void loop()
+{
+  if (Serial.available())
+  {
     processSerialData();
   }
 
-  if (halt) {
-    return; // Skip processing if halted
-  }
-
-  FastLED.delay(1000 / FRAMES_PER_SECOND);
-  FastLED.show();
-}
-
-void processSerialData() {
-  char inChar = (char)Serial.read();
-  if (inChar == '\n') {
-    serialString[strlen(serialString)] = '\0'; // Remove the newline character
-    handleCommand(serialString);
-    serialString[0] = '\0'; // Clear the string
-  } else {
-    strncat(serialString, &inChar, 1); // Append char to the string
+  if (!halt)
+  {
+    FastLED.show();
   }
 }
 
-void handleCommand(const char* command) {
-  Serial.write(command);
+void processSerialData()
+{
+  while (Serial.available() > 0)
+  {
+    char inChar = (char)Serial.read();
+    if (inChar == '\n')
+    {
+      setEffects(serialString);
+      serialString[0] = '\0';
+    }
+    else
+    {
+      strncat(serialString, &inChar, 1);
+    }
+  }
+}
 
-  if (strcmp(command, "H") == 0) {
+void setEffects(const char *config)
+{
+  // halt FastLED operations while
+  // processing serial data
+  if (strCompare(config, "H"))
+  {
     halt = true;
-  } else if (strcmp(command, "R") == 0) {
-    halt = false;
+    Serial.write("H");
+    return;
   }
+
+  Parser parser(config);
+  JSONObject obj = parser.parseObject();
+  JSONValue value = obj.get("effect");
+
+  halt = false;
+  Serial.write(value.string.str);
 }
 
+// Logic for meteor effect below
 
 // // Serial communication
 // if (Serial.available() > 0)

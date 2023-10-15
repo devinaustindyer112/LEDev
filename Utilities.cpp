@@ -11,14 +11,18 @@ int size(const char *str)
 
 int strCompare(const char *str1, const char *str2)
 {
-    while (*str1 != '\0' && *str2 != '\0')
+    int size1 = size(str1);
+    int size2 = size(str2);
+    if (size1 != size2)
     {
-        if (*str1 != *str2)
+        return 0;
+    }
+    for (int i = 0; i < size1; i++)
+    {
+        if (str1[i] != str2[i])
         {
             return 0;
         }
-        str1++;
-        str2++;
     }
     return 1;
 }

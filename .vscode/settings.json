@@ -3,6 +3,7 @@
         "cstddef": "cpp",
         "iostream": "cpp",
         "ostream": "cpp",
-        "*.tcc": "cpp"
+        "*.tcc": "cpp",
+        "sstream": "cpp"
     }
 }

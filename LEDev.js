@@ -1,6 +1,6 @@
 document.querySelector("button").addEventListener("click", async () => {
   const port = await navigator.serial.requestPort();
-  await port.open({ baudRate: 19200 });
+  await port.open({ baudRate: 115200 });
   const writer = await port.writable.getWriter();
   const decoder = new TextDecoder();
   portOpened();
@@ -53,11 +53,6 @@ async function watchColorPicker(event, writer) {
     }
     await writer.write(encoder.encode(`${JSON.stringify(json)}\n`));
   }, 1000);
-
-  setTimeout(async () => {
-    await writer.write(encoder.encode("R\n"));
-  }, 2000);
-
 }
 
 //JSON testing
