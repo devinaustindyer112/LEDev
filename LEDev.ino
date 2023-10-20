@@ -1,9 +1,7 @@
 #include <FastLED.h>
-#include "Parser.hpp"
-#include "JSONObject.hpp"
-#include "JSONValue.hpp"
-#include "String.hpp"
-#include "Utilities.hpp"
+// #include <JFA.hpp>
+#include <Test.h>
+// #include <String.hpp>
 
 #define BAUD_RATE 115200
 #define LED_PIN 13
@@ -66,23 +64,23 @@ void processSerialData()
 
 void setEffects(const char *config)
 {
-  // halt FastLED operations while
-  // processing serial data
-  if (strCompare(config, "H"))
-  {
-    halt = true;
-    Serial.write("H");
-    return;
-  }
+  //   // halt FastLED operations while
+  //   // processing serial data
+  //   if (strCompare(config, "H"))
+  //   {
+  //     halt = true;
+  //     Serial.write("H");
+  //     return;
+  //   }
 
-  Parser parser(config);
-  JSONObject obj = parser.parseObject();
-  JSONValue effect = obj.get("effect");
-  JSONValue color = obj.get("color");
+  //   Parser parser(config);
+  //   JSONObject obj = parser.parseObject();
+  //   JSONValue effect = obj.get("effect");
+  //   JSONValue color = obj.get("color");
 
-  halt = false;
-  Serial.write(effect.string.str);
-  Serial.write(color.string.str);
+  //   halt = false;
+  //   Serial.write(effect.string.str);
+  //   Serial.write(color.string.str);
 }
 
 // Logic for meteor effect below

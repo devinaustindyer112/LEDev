@@ -40,18 +40,16 @@ function portOpened() {
 async function watchColorPicker(event, writer) {
   const encoder = new TextEncoder();
 
-  // let hexString = event.target.value.substring(1);
-  // // Breaks the string into 2 character chunks representing hexidecimal
-  // const hexArray = hexString.match(/.{1,2}/g).map((byte) => parseInt(byte, 16));
-  // const dataArray = new Uint8Array(hexArray);
-  // await writer.write(dataArray);
+  const color = `#${event.target.value.substring(1)}`
+  const colorLabel = document.getElementById("color_label");
+  colorLabel.textContent = color
 
   await writer.write(encoder.encode("H\n"));
 
   setTimeout(async () => {
     const json = {
       effect: "wave",
-      color: "#c8743a",
+      color,
     }
     await writer.write(encoder.encode(`${JSON.stringify(json)}\n`));
   }, 1000);
