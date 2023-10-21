@@ -1,7 +1,5 @@
 #include <FastLED.h>
-// #include <JFA.hpp>
-#include <Test.h>
-// #include <String.hpp>
+#include <jfa.h>
 
 #define BAUD_RATE 115200
 #define LED_PIN 13
@@ -17,7 +15,7 @@ CRGB leds[NUM_LEDS];
 CRGBPalette16 currentPalette;
 
 char serialString[MAX_INPUT] = "";
-bool halt = false;
+bool halted = false;
 
 void setup()
 {
@@ -39,7 +37,7 @@ void loop()
     processSerialData();
   }
 
-  if (!halt)
+  if (!halted)
   {
     FastLED.show();
   }
@@ -64,23 +62,22 @@ void processSerialData()
 
 void setEffects(const char *config)
 {
-  //   // halt FastLED operations while
-  //   // processing serial data
-  //   if (strCompare(config, "H"))
-  //   {
-  //     halt = true;
-  //     Serial.write("H");
-  //     return;
-  //   }
+  // halt FastLED operations
+  if (!halted)
+  {
+    halted = true;
+    Serial.write("A");
+    return;
+  }
 
-  //   Parser parser(config);
-  //   JSONObject obj = parser.parseObject();
-  //   JSONValue effect = obj.get("effect");
-  //   JSONValue color = obj.get("color");
+  Parser parser(config);
+  JSONObject obj = parser.parseObject();
+  JSONValue effect = obj.get("effect");
+  JSONValue color = obj.get("color");
 
-  //   halt = false;
-  //   Serial.write(effect.string.str);
-  //   Serial.write(color.string.str);
+  halted = false;
+  Serial.write(effect.string.str);
+  Serial.write(color.string.str);
 }
 
 // Logic for meteor effect below
