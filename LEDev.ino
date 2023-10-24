@@ -13,9 +13,10 @@
 
 CRGB leds[NUM_LEDS];
 CRGBPalette16 currentPalette;
-
 char serialString[MAX_INPUT] = "";
 bool halted = false;
+
+char currentEffect[MAX_INPUT] = "none";
 
 void setup()
 {
@@ -39,6 +40,28 @@ void loop()
 
   if (!halted)
   {
+    int lowest = 50;
+    int highest = 200;
+    int position = beatsin16(BPM, lowest, highest);
+
+    if (strCompare(currentEffect, "meteor"))
+    {
+      // Meteor effect
+      for (int i = 0; i < NUM_LEDS; i++)
+      {
+        int lastLED = NUM_LEDS - 1;
+        if (i == 0)
+        {
+          leds[lastLED] = leds[0];
+        }
+        else
+        {
+          leds[i - 1] = leds[i];
+        }
+      }
+    }
+
+    delay(1000 / FRAMES_PER_SECOND);
     FastLED.show();
   }
 }
@@ -50,7 +73,7 @@ void processSerialData()
     char inChar = (char)Serial.read();
     if (inChar == '\n')
     {
-      setEffects(serialString);
+      processString(serialString);
       serialString[0] = '\0';
     }
     else
@@ -60,7 +83,7 @@ void processSerialData()
   }
 }
 
-void setEffects(const char *config)
+void processString(char *str)
 {
   // halt FastLED operations
   if (!halted)
@@ -70,14 +93,22 @@ void setEffects(const char *config)
     return;
   }
 
+  Serial.write("setEffects");
+  setEffects(str);
+}
+
+void setEffects(const char *config)
+{
   Parser parser(config);
   JSONObject obj = parser.parseObject();
   JSONValue effect = obj.get("effect");
-  JSONValue color = obj.get("color");
+
+  Serial.print(effect.string.str);
+  strncpy(currentEffect, effect.string.str, sizeof(currentEffect) - 1);
+  Serial.print(currentEffect);
 
   halted = false;
-  Serial.write(effect.string.str);
-  Serial.write(color.string.str);
+  Serial.write("C");
 }
 
 // Logic for meteor effect below
