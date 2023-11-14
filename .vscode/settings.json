@@ -5,6 +5,15 @@
         "ostream": "cpp",
         "*.tcc": "cpp",
         "sstream": "cpp",
-        "istream": "cpp"
+        "istream": "cpp",
+        "array": "cpp",
+        "format": "cpp",
+        "locale": "cpp",
+        "memory": "cpp",
+        "thread": "cpp",
+        "tuple": "cpp",
+        "variant": "cpp",
+        "functional": "cpp",
+        "utility": "cpp"
     }
 }
